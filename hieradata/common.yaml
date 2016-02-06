@@ -99,7 +99,7 @@ timezone::timezone: 'Etc/UTC'
 # SELinux
 #
 #
-selinux::mode: 'enforcing'
+selinux::mode: 'permissive'
 
 # NRPE Agent
 #

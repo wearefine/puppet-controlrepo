@@ -15,6 +15,16 @@ class profile::base::puppet::master {
   #
   #
   profile::base::firewall::allow_puppetmaster { $trusted_networks_puppetmaster: }
+  
+  # Passenger's yum repo
+  #
+  #
+  yum::repo { 'passenger':
+    baseurl  => 'https://oss-binaries.phusionpassenger.com/yum/passenger/el/$releasever/$basearch',
+    gpgcheck => '0',
+    enabled  => '1',
+    gpgkey   => 'https://packagecloud.io/gpg.key',
+  }
 
   # Set up R10K
   #
@@ -27,8 +37,6 @@ class profile::base::puppet::master {
     eyaml     => $puppet_master_hiera_eyaml,
     hierarchy => $puppet_master_hiera_hierarchy,
     datadir   => $puppet_master_hiera_datadir,
-    # Enable this when hunner/hiera module's tag 1.3.3 gets published
-    #master_service => $puppet_master_master_service,
   }
 
   # Setup Puppetmaster
@@ -36,6 +44,7 @@ class profile::base::puppet::master {
   #
   class { '::puppet::master':
     environments => $puppet_master_environments,
+    require      => [ 'Yum::Repo[passenger]', ],
   }
   
 }
